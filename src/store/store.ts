@@ -12,24 +12,24 @@ import {
   REHYDRATE,
 } from "redux-persist";
 
-// const persistConfig = {
-//   key: "movie",
-//   storage,
-// };
-//
-// const reducers = combineReducers({ moviesSlice: moviesSlice.reducer });
-//
-// const persistedReducer = persistReducer(persistConfig, reducers);
+const persistConfig = {
+  key: "movie",
+  storage,
+};
+
+const reducers = combineReducers({ moviesSlice: moviesSlice.reducer });
+
+const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
-  // reducer: persistedReducer,
-  reducer: { moviesSlice: moviesSlice.reducer },
-  // middleware: (getDefaultMiddleware) =>
-  //   getDefaultMiddleware({
-  //     serializableCheck: {
-  //       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-  //     },
-  //   }),
+  reducer: persistedReducer,
+  // reducer: { moviesSlice: moviesSlice.reducer },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
   devTools: process.env.NODE_ENV !== "production",
 });
 

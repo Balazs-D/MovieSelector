@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { AppDispatch, RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getMovie, resetMovieDetails } from "../../AppSlice";
+import {getListByGenre, getMovie, resetMovieDetails} from "../../AppSlice";
 import { MovieDetailsStyle } from "./MovieDetailsStyle";
+import {StyledFunction} from "styled-components";
 
 const imageBaseUrl = "https://image.tmdb.org/t/p/original";
 
@@ -11,15 +12,20 @@ export const MovieDetails = () => {
   const movieId = useSelector((state: RootState) => state.moviesSlice.movieId);
   const details = useSelector(
     (state: RootState) => state.moviesSlice.movieDetails
-  );
+  )
+
 
   useEffect(() => {
     dispatch(getMovie({ movieId: movieId }));
 
     return () => {
       dispatch(resetMovieDetails());
+
     };
   }, [movieId]);
+
+
+
 
   return (
     <MovieDetailsStyle>
@@ -33,6 +39,7 @@ export const MovieDetails = () => {
           className="movieDetailScreen__img"
           alt={details?.title + "_cover"}
           src={imageBaseUrl + details?.poster_path}
+
         />
         <div className="movieDetailScreen__data_text">
           <div>

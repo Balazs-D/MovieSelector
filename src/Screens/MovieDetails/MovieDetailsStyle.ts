@@ -1,15 +1,18 @@
 import styled from "styled-components";
 
+
+
 export const MovieDetailsStyle = styled.div`
   width: 100vw;
   height: 80%;
   margin: auto;
-  background-image: linear-gradient(90deg, #026e81, rgba(0, 0, 0, 0.8));
   display: flex;
+  background-image: linear-gradient(90deg, #026e81, rgba(0, 0, 0, 0.8));
   justify-content: center;
   align-items: center;
   overflow: hidden;
   position: relative;
+
 
   .movieDetailScreen__data {
     height: 100%;

@@ -1,5 +1,5 @@
 import { LINK } from "./MovieListItemStyle";
-import React from "react";
+import React, {useState} from "react";
 
 interface Props {
   title: string;
@@ -14,9 +14,10 @@ export const MovieListItem: React.FC<Props> = ({
   imgUrl,
   onClick,
 }) => {
+  const [loaded, setLoaded] = useState<boolean>(false)
   return (
-    <LINK to={to} onClick={onClick}>
-      <img alt={title + "_cover"} src={imgUrl} />
+    <LINK to={to} onClick={onClick} className={loaded ? "cmp--loaded": "cmp-hidden"} >
+      <img alt={title + "_cover"} src={imgUrl} onLoad={()=>setLoaded(prev=> !prev)} />
       <div className="movieListItem__info">{title}</div>
     </LINK>
   );

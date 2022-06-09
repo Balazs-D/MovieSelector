@@ -10,6 +10,14 @@ export const LINK = styled(Link)`
   color: #026e81;
   transition: all 0.3s linear;
 
+  .cmp--loaded {
+    display: block;
+   }
+
+  .cmp--hidden {
+    display: none;
+  }
+
   &:hover {
     transition: all 0.2s linear;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -19,6 +27,8 @@ export const LINK = styled(Link)`
     width: 100%;
     object-fit: contain;
   }
+  
+
 
   .movieListItem__info {
     padding: 10px;

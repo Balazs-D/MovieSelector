@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Home } from "./Screens/Home/Home";
 import {MovieList} from "./Screens/MovieList/MovieList";
 import {MovieDetails} from "./Screens/MovieDetails/MovieDetails";
+import {Header} from "./Components/Header/Header";
 
 
 const AppContainer = styled.div`
@@ -19,6 +20,7 @@ const AppContainer = styled.div`
 export const App = () => {
   return (
     <AppContainer>
+        <Header />
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path=":genre" element={<MovieList />} />

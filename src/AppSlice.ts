@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Genres, MovieDetails, MovieList} from "./Types";
+import { Genres, MovieDetails, MovieList } from "./Types";
 
 const baseUrl = "https://api.themoviedb.org/3";
 const movieDbApiKey = "86cc61c0363c975b6de2d10f8d915694";
@@ -10,13 +10,12 @@ export interface MovieSelector {
     isLoading: boolean;
     isError: Record<string, unknown> | null;
   };
-  genres: Genres[];
   genre: { code: number; name: string };
+  movieId: number;
+  genres: Genres[];
+  currentQuery: string;
   listOfMovies: MovieList;
   movieDetails: MovieDetails | null;
-  movieId: number
-
-
 }
 
 const initialState: MovieSelector = {
@@ -24,8 +23,10 @@ const initialState: MovieSelector = {
     isLoading: false,
     isError: null,
   },
-  genres: [],
   genre: { code: 0, name: "" },
+  movieId: 0,
+  genres: [],
+  currentQuery: "",
   listOfMovies: {
     page: 1,
     results: [],
@@ -33,10 +34,6 @@ const initialState: MovieSelector = {
     total_results: 0,
   },
   movieDetails: null,
-  movieId: 0,
-
-
-
 };
 
 /**
@@ -45,23 +42,25 @@ const initialState: MovieSelector = {
 
 export const getGenres = createAsyncThunk("genres/getGenres", async () => {
   const res = await axios
-    .get(`${baseUrl}/genre/movie/list?api_key=${movieDbApiKey}&language=en-US`)
-    .then((response: AxiosResponse<Genres>) => response.data)
-    .catch((error) => error);
+      .get(`${baseUrl}/genre/movie/list?api_key=${movieDbApiKey}&language=en-US`)
+      .then((response: AxiosResponse<Genres>) => response.data)
+      .catch((error) => error);
 
   return res.genres;
 });
 
 export const getListByGenre = createAsyncThunk(
     "genres/getListByGenre",
-    async (args: { genreId: number; page: number }) => {
+    async (args: { genreId: number; page: number }
+           ) => {
       const { genreId, page } = args;
       const res = await axios
           .get(
-              `${baseUrl}/discover/movie?api_key=${movieDbApiKey}&with_genres=${genreId}&${page}`
+              `${baseUrl}/discover/movie?api_key=${movieDbApiKey}&with_genres=${genreId}&page=${page}`
           )
           .then((response: AxiosResponse<MovieList>) => response.data)
           .catch((error) => error);
+
 
       return res;
     }
@@ -82,6 +81,19 @@ export const getMovie = createAsyncThunk(
     }
 );
 
+export const searchMovie = createAsyncThunk(
+    "search/getMovie",
+    async (args: { query: string }) => {
+      const { query } = args;
+      setQuery(query);
+
+      const res = await axios
+          .get(`${baseUrl}/search/movie?api_key=${movieDbApiKey}&query=${query}`)
+          .then((response: AxiosResponse<MovieList>) => response.data)
+          .catch((error) => error);
+      return res;
+    }
+);
 
 /**
  * REDUCERS
@@ -90,20 +102,28 @@ export const moviesSlice = createSlice({
   name: "movies",
   initialState,
   reducers: {
+    resetGenreList: (state: MovieSelector) => {
+      state.listOfMovies = {
+        page: 1,
+        results: [],
+        total_pages: 1,
+        total_results: 0,
+      };
+    },
+    resetMovieDetails: (state: MovieSelector) => {
+      state.movieDetails = null;
+    },
     setGenreData: (
         state: MovieSelector,
         action: PayloadAction<{ code: number; name: string }>
     ) => {
       state.genre = action.payload;
     },
-    resetGenreList: (state: MovieSelector) => {
-      state.listOfMovies = initialState.listOfMovies
-    },
     setMovieId: (state: MovieSelector, action: PayloadAction<number>) => {
       state.movieId = action.payload;
     },
-    resetMovieDetails: (state: MovieSelector) => {
-      state.movieDetails = null;
+    setQuery: (state: MovieSelector, action: PayloadAction<string>) => {
+      state.currentQuery = action.payload;
     },
   },
   extraReducers: {
@@ -116,7 +136,10 @@ export const moviesSlice = createSlice({
     },
     [getGenres.fulfilled.type]: (state, action) => {
       state.genres = action.payload;
-      state.processing = initialState.processing
+      state.processing = {
+        isLoading: false,
+        isError: null,
+      };
     },
     [getGenres.rejected.type]: (state, action) => {
       state.genres = [];
@@ -126,7 +149,12 @@ export const moviesSlice = createSlice({
       };
     },
     [getListByGenre.pending.type]: (state) => {
-      state.listOfMovies = initialState.listOfMovies
+      state.listOfMovies = {
+        page: 1,
+        results: [],
+        total_pages: 1,
+        total_results: 0,
+      };
       state.processing = {
         isLoading: true,
         isError: null,
@@ -139,14 +167,21 @@ export const moviesSlice = createSlice({
         total_pages: action.payload.total_pages,
         total_results: action.payload.total_results,
       };
-      state.processing = initialState.processing
-
-    },
-    [getListByGenre.rejected.type]: (state, action) => {
-      state.listOfMovies = initialState.listOfMovies
       state.processing = {
         isLoading: false,
-        isError: action.payload.message,
+        isError: null,
+      };
+    },
+    [getListByGenre.rejected.type]: (state, action) => {
+      state.listOfMovies = {
+        page: 1,
+        results: [],
+        total_pages: 1,
+        total_results: 0,
+      };
+      state.processing = {
+        isLoading: false,
+        isError: action.payload,
       };
     },
     [getMovie.pending.type]: (state) => {
@@ -158,7 +193,10 @@ export const moviesSlice = createSlice({
     },
     [getMovie.fulfilled.type]: (state, action) => {
       state.movieDetails = action.payload;
-      state.processing = initialState.processing
+      state.processing = {
+        isLoading: false,
+        isError: null,
+      };
     },
     [getMovie.rejected.type]: (state, action) => {
       state.genres = [];
@@ -167,8 +205,50 @@ export const moviesSlice = createSlice({
         isError: action.payload.message,
       };
     },
+
+    [searchMovie.pending.type]: (state) => {
+      state.listOfMovies = {
+        page: 1,
+        results: [],
+        total_pages: 1,
+        total_results: 0,
+      };
+      state.processing = {
+        isLoading: true,
+        isError: null,
+      };
+    },
+    [searchMovie.fulfilled.type]: (state, action) => {
+      (state.listOfMovies = {
+        page: action.payload.page,
+        results: action.payload.results,
+        total_pages: action.payload.total_pages,
+        total_results: action.payload.total_results,
+      }),
+          (state.processing = {
+            isLoading: false,
+            isError: null,
+          });
+    },
+    [searchMovie.rejected.type]: (state, action) => {
+      state.listOfMovies = {
+        page: 1,
+        results: [],
+        total_pages: 1,
+        total_results: 0,
+      };
+      state.processing = {
+        isLoading: false,
+        isError: action.payload.message,
+      };
+    },
   },
 });
 
-export const {setGenreData,setMovieId, resetMovieDetails
+export const {
+  resetGenreList,
+  resetMovieDetails,
+  setGenreData,
+  setMovieId,
+  setQuery,
 } = moviesSlice.actions;
