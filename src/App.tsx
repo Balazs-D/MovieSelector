@@ -1,8 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-
 import styled from "styled-components";
 import { Home } from "./Screens/Home/Home";
+import {MovieList} from "./Screens/MovieList/MovieList";
+import {MovieDetails} from "./Screens/MovieDetails/MovieDetails";
 
 
 const AppContainer = styled.div`
@@ -20,7 +21,10 @@ export const App = () => {
     <AppContainer>
         <Routes>
             <Route path="/" element={<Home />} />
-      </Routes>
+            <Route path=":genre" element={<MovieList />} />
+            <Route path=":genre/:movieId" element={<MovieDetails />} />
+
+        </Routes>
     </AppContainer>
   );
 };
