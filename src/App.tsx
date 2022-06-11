@@ -5,6 +5,7 @@ import { Home } from "./Screens/Home/Home";
 import {MovieList} from "./Screens/MovieList/MovieList";
 import {MovieDetails} from "./Screens/MovieDetails/MovieDetails";
 import {Header} from "./Components/Header/Header";
+import { NotFound } from "./Components/NotFound/NotFound";
 
 
 const AppContainer = styled.div`
@@ -23,6 +24,7 @@ export const App = () => {
         <Header />
         <Routes>
             <Route path="/" element={<Home />} />
+            <Route path='*' element={<NotFound />} />
             <Route path=":genre" element={<MovieList />} />
             <Route path=":genre/:movieId" element={<MovieDetails />} />
 

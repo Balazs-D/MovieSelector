@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import { AppDispatch, RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import {getListByGenre, getMovie, resetMovieDetails} from "../../AppSlice";
+import {getListByGenre, getMovie, resetMovieDetails, searchMovie} from "../../AppSlice";
 import { MovieDetailsStyle } from "./MovieDetailsStyle";
-import {StyledFunction} from "styled-components";
+import {ListMode} from "../../Types";
 
 const imageBaseUrl = "https://image.tmdb.org/t/p/original";
+
 
 export const MovieDetails = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -20,6 +21,7 @@ export const MovieDetails = () => {
 
     return () => {
       dispatch(resetMovieDetails());
+
 
     };
   }, [movieId]);

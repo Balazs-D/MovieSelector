@@ -10,12 +10,18 @@ export const LINK = styled(Link)`
   color: #026e81;
   transition: all 0.3s linear;
 
-  .cmp--loaded {
-    display: block;
-   }
+  .pulse {
+    animation: pulse 0.1s infinite alternate;
+  }
 
-  .cmp--hidden {
-    display: none;
+  @keyframes pulse {
+    from {
+      opacity: .1;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 
   &:hover {
@@ -34,3 +40,5 @@ export const LINK = styled(Link)`
     padding: 10px;
   }
 `;
+
+

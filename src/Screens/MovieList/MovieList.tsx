@@ -1,106 +1,91 @@
-import React, {useEffect, useState} from "react";
-import {  MovieListContainer, MovieScreen } from "./MovieListStyle";
-import { AppDispatch, RootState } from "../../store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { MovieListItem } from "../../Components/MovieListItem/MovieListItem";
+import React, {useEffect, useRef, useState} from "react";
+import {MovieListContainer, MovieScreen} from "./MovieListStyle";
+import {AppDispatch, RootState} from "../../store/store";
+import {useDispatch, useSelector} from "react-redux";
+import {MovieListItem} from "../../Components/MovieListItem/MovieListItem";
 import {getListByGenre, resetGenreList, searchMovie, setMovieId, setQuery} from "../../AppSlice";
 import {ResultDisplay} from "../../Components/ResultDisplay/ResultDisplay";
-import {MovieDetails} from "../../Types";
-
+import {ListMode} from "../../Types";
+import {useParams} from "react-router-dom";
 
 
 const imageBaseUrl = "https://image.tmdb.org/t/p/original";
 
 export const MovieList = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const listOfMovies = useSelector(
-    (state: RootState) => state.moviesSlice.listOfMovies
-  );
-  const genre = useSelector((state: RootState) => state.moviesSlice.genre);
-  const pagination = useSelector(
-    (state: RootState) => state.moviesSlice.listOfMovies
-  );
-  // const processing = useSelector((state: RootState) => state.moviesSlice.processing)
+    const dispatch: AppDispatch = useDispatch();
+    const {genre} = useParams()
+    const listOfMovies = useSelector(
+        (state: RootState) => state.moviesSlice.listOfMovies
+    );
+    const genreData = useSelector((state: RootState) => state.moviesSlice.genre);
+    const pagination = useSelector(
+        (state: RootState) => state.moviesSlice.listOfMovies
+    );
+    const mode = useSelector((state: RootState) => state.moviesSlice.listMode)
 
-const [d, setD] = useState<MovieDetails[]>([])
-  const processing = useSelector(
-    (state: RootState) => state.moviesSlice.processing
-  );
-  const searchQuery = useSelector(
-    (state: RootState) => state.moviesSlice.currentQuery
-  );
+    const processing = useSelector(
+        (state: RootState) => state.moviesSlice.processing
+    );
+    const searchQuery = useSelector(
+        (state: RootState) => state.moviesSlice.currentQuery
+    );
 
-  useEffect(() => {
-    if (searchQuery) {
-      dispatch(searchMovie({ query: searchQuery }));
+    const getMovieList = (nextPageToCall: number, query: string) => {
+        console.log(query)
+        if (ListMode.SEARCH === mode) {
+            dispatch(searchMovie({query: query , page: nextPageToCall}));
+        } else {
+            dispatch(getListByGenre({genreId: genreData!.code ?? genre, page: nextPageToCall}));
+
+        }
     }
-    dispatch(getListByGenre({ genreId: genre!.code, page: pagination.page }));
 
-    return () => {
-      dispatch(resetGenreList());
-      dispatch(setQuery(""));
-    };
+    useEffect(() => {
 
-  }, [dispatch]);
+        getMovieList(pagination.page, searchQuery)
+       dispatch( setMovieId(0))
+
+        return () => {
+            dispatch(resetGenreList());
+            // dispatch((setQuery("")))
+        };
+
+    }, [dispatch]);
 
 
-  useEffect(()=>{
-    if(listOfMovies.results.length >0){
-      setD(listOfMovies.results)
-
+    if (processing.isLoading) {
+        return <div>Loading....</div>
     }
-  },[listOfMovies])
 
-const loadMore =()=>{
-
-  dispatch(getListByGenre({genreId: genre!.code, page: Number(pagination.page) + 1 }))
-
-}
-
-useEffect(()=>{
-  if(listOfMovies.page > 1){
-    console.log(d)
-    console.log(listOfMovies.results)
-    setD(d.concat(listOfMovies.results))
-  }
-}, [listOfMovies.page])
-
-
-
-
-  const handleScroll = (e:{ target: HTMLInputElement }) => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if(bottom){
-      loadMore()
-
-
-    }
-  }
-
-  if (listOfMovies.results.length === 0) {
-    return <MovieScreen>No search result...</MovieScreen>;
-  }
-  return (
-    <MovieScreen onScroll={handleScroll}>
-      <ResultDisplay />
-      <MovieListContainer  >
-        {d.map((item, i) => (
-          <MovieListItem
-            to={"/" + genre.name + "/" + item.id}
-            onClick={() => {
-              dispatch(setMovieId(item.id));
-              // dispatch(setQuery(""));
-            }}
-            imgUrl={imageBaseUrl + item.backdrop_path}
-            title={item.title}
-            key={i}
-          />
-        ))}
-      </MovieListContainer>
-<a id="bottom" />
-      <div className="movieListScreen__loadmore">LOAD MORE...</div>
+    return (
+        <MovieScreen>
+            <ResultDisplay/>
+            <MovieListContainer>
+                {(listOfMovies && listOfMovies.results) && listOfMovies.results.map((item, i) => (
+                    <MovieListItem
+                        to={"/" + genreData.name + "/" + item.id}
+                        onClick={() => {
+                            dispatch(setMovieId(item.id));
+                        }}
+                        imgUrl={imageBaseUrl + item.backdrop_path}
+                        title={item.title}
+                        key={i}
+                    />
+                ))}
+            </MovieListContainer>
+            <div className="movieListScreen__pagination">
+                <button
+                    className={(pagination.page === 1 ? "disabled" : "enabled") + " " + ("movieListScreen__loadmore-button")}
+                    onClick={() => getMovieList(pagination.page - 1, searchQuery)}>back
+                </button>
+                <div className="movieListScreen__pagination_data">{listOfMovies.page} / {listOfMovies.total_pages}</div>
+                <button
+                    className={(pagination.page === pagination.total_results ? "disabled" : "enabled") + " " + ("movieListScreen__loadmore-button")}
+                    onClick={() => getMovieList(pagination.page + 1, searchQuery)}>next
+                </button>
+            </div>
 
 
-    </MovieScreen>
-  );
+        </MovieScreen>
+    );
 }

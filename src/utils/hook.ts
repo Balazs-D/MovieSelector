@@ -1,0 +1,40 @@
+import { RefObject, useEffect, useState } from "react";
+
+export const useOnLoadImages = (ref: RefObject<HTMLElement>) => {
+    const [status, setStatus] = useState(false);
+
+    useEffect(() => {
+        const updateStatus = (images: HTMLImageElement[]) => {
+            setStatus(
+                images.map((image) => image.complete).every((item) => item === true)
+            );
+        };
+
+        if (!ref?.current) return;
+
+        const imagesLoaded = Array.from(ref.current.querySelectorAll("img"));
+
+        if (imagesLoaded.length === 0) {
+            setStatus(true);
+            return;
+        }
+
+
+        imagesLoaded.forEach((image) => {
+
+
+            // @ts-ignore
+            image.addEventListener("load", () => updateStatus(imagesLoaded), {
+                once: true
+            });
+            // @ts-ignore
+            image.addEventListener("error", () => updateStatus(imagesLoaded), {
+                once: true
+            });
+        });
+
+        return;
+    }, [ref]);
+
+    return status;
+};

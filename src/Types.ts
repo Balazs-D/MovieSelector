@@ -1,6 +1,6 @@
-export enum Status {
-  IDLE = "IDLE",
-  LOADING = "LOADING",
+export enum ListMode {
+ SEARCH ="SEARCH",
+ GENRE = "GENRE"
 }
 
 export interface Genres {
