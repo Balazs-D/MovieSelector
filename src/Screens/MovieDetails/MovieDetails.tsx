@@ -27,7 +27,6 @@ export const MovieDetails = () => {
         };
     }, [dispatch, movieId]);
 
-
     return (
         <MovieDetailsStyle backdrop={loaded.backdrop} cover={loaded.cover}>
             <img

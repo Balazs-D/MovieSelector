@@ -22,6 +22,7 @@ export const MovieListItem: React.FC<Props> = ({
     const onError = () => {
         setError(true)
     };
+
     return (
         <ListItemLink to={to} onClick={onClick} onLoad={() => setLoaded(true)} loaded={loaded}>
             <img alt={title + "_cover"} src={loaded ? (error ? placeholder : imgUrl) : placeholder} onError={onError}/>

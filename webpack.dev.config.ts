@@ -32,23 +32,14 @@ const config: Configuration = {
             },
             {test: /\.css$/, use: 'css-loader'},
             {
-                test: /\.(jpg|jpeg|gif|png)$/,
-                use: {
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        publicPath: 'assets',
-                        outputPath: 'assets',
-                    }
-                }
-            },
-            {
                 test: /\.(jpe?g|png|gif|woff|woff2|otf|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+                type: 'asset/resource',
+                dependency: { not: ['url'] },
                 use: [
                     {
                         loader: 'url-loader',
                         options: {
-                            limit: 1000,
+                            limit: 8192,
                             name: '[name].[ext]'
                         }
                     }

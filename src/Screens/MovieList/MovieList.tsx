@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, { useEffect} from "react";
 import {MovieListContainer, MovieScreen} from "./MovieListStyle";
 import {AppDispatch, RootState} from "../../store/store";
 import {useDispatch, useSelector} from "react-redux";
@@ -30,19 +30,20 @@ export const MovieList = () => {
         (state: RootState) => state.moviesSlice.currentQuery
     );
 
-    const getMovieList = useCallback((nextPageToCall: number, query: string)=>() => {
+    const getMovieList = (nextPageToCall: number, query: string) => {
+        console.log("ddd")
         if (ListMode.SEARCH === mode) {
             dispatch(searchMovie({query: query, page: nextPageToCall}));
         } else {
             dispatch(getListByGenre({genreId: genreData.code ?? genre, page: nextPageToCall}));
         }
-    }, [dispatch, genre, genreData.code, mode])
+    }
 
     useEffect(() => {
         getMovieList(pagination.page, searchQuery)
         dispatch(setMovieId(0))
-
-    }, [dispatch,getMovieList, pagination.page, searchQuery]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, pagination.page, searchQuery]);
 
 
     if (processing.isLoading) {

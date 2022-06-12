@@ -22,6 +22,7 @@ export const Home = () => {
         dispatch(setListMode(ListMode.GENRE))
     }
     useEffect(() => {
+
         dispatch(resetGenreList());
         dispatch(getGenres())
         dispatch(setGenreData({code: 0,name:""}))
