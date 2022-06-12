@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect} from "react";
 import {MovieListContainer, MovieScreen} from "./MovieListStyle";
 import {AppDispatch, RootState} from "../../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {MovieListItem} from "../../Components/MovieListItem/MovieListItem";
-import {getListByGenre, resetGenreList, searchMovie, setMovieId, setQuery} from "../../AppSlice";
+import {getListByGenre, searchMovie, setMovieId} from "../../AppSlice";
 import {ResultDisplay} from "../../Components/ResultDisplay/ResultDisplay";
 import {ListMode} from "../../Types";
 import {useParams} from "react-router-dom";
@@ -30,24 +30,19 @@ export const MovieList = () => {
         (state: RootState) => state.moviesSlice.currentQuery
     );
 
-    const getMovieList = (nextPageToCall: number, query: string) => {
+    const getMovieList = useCallback((nextPageToCall: number, query: string)=>() => {
         if (ListMode.SEARCH === mode) {
             dispatch(searchMovie({query: query, page: nextPageToCall}));
         } else {
-            dispatch(getListByGenre({genreId: genreData!.code ?? genre, page: nextPageToCall}));
-
+            dispatch(getListByGenre({genreId: genreData.code ?? genre, page: nextPageToCall}));
         }
-    }
+    }, [dispatch, genre, genreData.code, mode])
 
     useEffect(() => {
         getMovieList(pagination.page, searchQuery)
         dispatch(setMovieId(0))
 
-        return () => {
-
-        };
-
-    }, [dispatch]);
+    }, [dispatch,getMovieList, pagination.page, searchQuery]);
 
 
     if (processing.isLoading) {

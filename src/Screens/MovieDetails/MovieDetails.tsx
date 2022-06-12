@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {AppDispatch, RootState} from "../../store/store";
 import {useDispatch, useSelector} from "react-redux";
-import {getMovie, resetMovieDetails, searchMovie} from "../../AppSlice";
+import {getMovie, resetMovieDetails} from "../../AppSlice";
 import {MovieDetailsStyle} from "./MovieDetailsStyle";
 
 const imageBaseUrl = "https://image.tmdb.org/t/p/original";
@@ -9,7 +9,7 @@ const imageBaseUrl = "https://image.tmdb.org/t/p/original";
 export interface Loaded {
     backdrop: boolean,
     cover: boolean
-};
+}
 
 export const MovieDetails = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -25,7 +25,7 @@ export const MovieDetails = () => {
         return () => {
             dispatch(resetMovieDetails());
         };
-    }, [movieId]);
+    }, [dispatch, movieId]);
 
 
     return (

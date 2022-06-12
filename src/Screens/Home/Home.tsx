@@ -25,7 +25,7 @@ export const Home = () => {
         dispatch(resetGenreList());
         dispatch(getGenres())
         dispatch(setGenreData({code: 0,name:""}))
-    }, [])
+    }, [dispatch])
 
     if(isLoading){
         return <div>loading.......</div>

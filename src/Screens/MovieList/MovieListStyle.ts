@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import {Loaded} from "../MovieDetails/MovieDetails";
 
 interface Props {
     lastPage: boolean,
