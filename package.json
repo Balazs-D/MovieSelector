@@ -7,6 +7,7 @@
     "@types/react-redux": "^7.1.24",
     "axios": "^0.27.2",
     "file-loader": "^6.2.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.11",
     "node-fetch": "^3.2.6",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -33,10 +34,12 @@
     "@typescript-eslint/parser": "^5.27.0",
     "babel-jest": "^28.1.1",
     "babel-loader": "^8.2.5",
+    "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
     "eslint": "^8.16.0",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
+    "eslint-webpack-plugin": "^3.1.1",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^28.1.1",
     "prettier": "2.6.2",
@@ -51,6 +54,7 @@
   "scripts": {
     "start": "webpack serve --config webpack.dev.config.ts",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build": "webpack --config webpack.prod.config.ts"
   }
 }
