@@ -30,9 +30,8 @@ const config: Configuration = {
                     },
                 },
             },
-            {test: /\.css$/, use: 'css-loader'},
             {
-                test: /\.(jpe?g|png|gif|woff|woff2|otf|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+                test: /\.png/,
                 type: 'asset/resource',
                 dependency: { not: ['url'] },
                 use: [
@@ -40,8 +39,10 @@ const config: Configuration = {
                         loader: 'url-loader',
                         options: {
                             limit: 8192,
-                            name: '[name].[ext]'
-                        }
+                            name: '[name].[ext]',
+                            query: {
+                                name:'assets/[name].[ext]'
+                            }}
                     }
                 ]
             }
