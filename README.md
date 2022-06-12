@@ -1,7 +1,8 @@
 # Movie Selector
 
 A simple app to list movies by genres. 
-Visit [MovieSelector](https://movie-selector-ten.vercel.app/) deployed at Vercel.
+
+[//]: # (Visit [MovieSelector]&#40;https://movie-selector-ten.vercel.app/&#41; deployed at Vercel.)
 
 ## Run the app
 
