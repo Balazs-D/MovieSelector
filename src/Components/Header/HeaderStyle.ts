@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const HeaderContainer = styled.div`
+interface Props {
+    isQuery: boolean
+}
+
+export const HeaderContainer = styled.div<Props>`
   .header__actions {
     border-bottom: 1px solid grey;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -39,13 +43,11 @@ export const HeaderContainer = styled.div`
       border-left: 1px solid grey;
       text-decoration: none;
       font-size: 1rem;
-      color: #026e81;
+      pointer-events: ${p => p.isQuery ? "all" : "none"};
+      color: ${p => p.isQuery ? "#026e81" : "grey"};
     }
 
-    .link--disabled {
-      pointer-events: none;
-      color: grey;
-    }
+    
   }
 
   

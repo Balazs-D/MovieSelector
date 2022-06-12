@@ -1,4 +1,4 @@
-import { LINK } from "./MovieListItemStyle";
+import { ListItemLink } from "./MovieListItemStyle";
 import React, {MutableRefObject, SyntheticEvent, useRef, useState} from "react";
 import placeholder from "../../assets/movie-placeholder.png"
 
@@ -25,10 +25,10 @@ export const MovieListItem: React.FC<Props> = ({
     const onError = (e: SyntheticEvent) => {
 setError(true)    };
   return (
-    <LINK to={to} onClick={onClick} className={loaded ? "cmp--loaded": "cmp-hidden"} onLoad={()=>setLoaded(true)}>
-      <img alt={title + "_cover"} src={loaded ? (error ? placeholder : imgUrl): placeholder} className={loaded ? "" : "pulse"} onError={onError} />
+    <ListItemLink to={to} onClick={onClick} onLoad={()=>setLoaded(true)} loaded={loaded}>
+      <img alt={title + "_cover"} src={loaded ? (error ? placeholder : imgUrl): placeholder}  onError={onError} />
       <div className="movieListItem__info">{title}</div>
-    </LINK>
+    </ListItemLink>
   );
 };
 function useEffect(arg0: () => void) {

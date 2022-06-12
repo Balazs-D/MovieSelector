@@ -1,8 +1,9 @@
 import styled from "styled-components";
+import {Loaded} from "./MovieDetails";
 
 
 
-export const MovieDetailsStyle = styled.div`
+export const MovieDetailsStyle = styled.div<Loaded>`
   width: 100vw;
   height: 80%;
   margin: auto;
@@ -20,11 +21,14 @@ export const MovieDetailsStyle = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    visibility: ${p => p.cover ? "visible" : "hidden"}
   }
 
   .movieDetailScreen__backdrop {
     position: absolute;
     z-index: -1;
+    visibility: ${p => p.backdrop ? "visible" : "hidden"}
+
   }
 
   .movieDetailScreen__img {

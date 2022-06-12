@@ -31,9 +31,8 @@ export const MovieList = () => {
     );
 
     const getMovieList = (nextPageToCall: number, query: string) => {
-        console.log(query)
         if (ListMode.SEARCH === mode) {
-            dispatch(searchMovie({query: query , page: nextPageToCall}));
+            dispatch(searchMovie({query: query, page: nextPageToCall}));
         } else {
             dispatch(getListByGenre({genreId: genreData!.code ?? genre, page: nextPageToCall}));
 
@@ -41,13 +40,11 @@ export const MovieList = () => {
     }
 
     useEffect(() => {
-
         getMovieList(pagination.page, searchQuery)
-       dispatch( setMovieId(0))
+        dispatch(setMovieId(0))
 
         return () => {
-            dispatch(resetGenreList());
-            // dispatch((setQuery("")))
+
         };
 
     }, [dispatch]);
@@ -57,8 +54,9 @@ export const MovieList = () => {
         return <div>Loading....</div>
     }
 
+
     return (
-        <MovieScreen>
+        <MovieScreen firstPage={pagination.page === 1} lastPage={pagination.page === pagination.total_pages}>
             <ResultDisplay/>
             <MovieListContainer>
                 {(listOfMovies && listOfMovies.results) && listOfMovies.results.map((item, i) => (
@@ -75,17 +73,15 @@ export const MovieList = () => {
             </MovieListContainer>
             <div className="movieListScreen__pagination">
                 <button
-                    className={(pagination.page === 1 ? "disabled" : "enabled") + " " + ("movieListScreen__loadmore-button")}
+                    className="movieListScreen__loadmore-button movieListScreen__loadmore-button--back"
                     onClick={() => getMovieList(pagination.page - 1, searchQuery)}>back
                 </button>
                 <div className="movieListScreen__pagination_data">{listOfMovies.page} / {listOfMovies.total_pages}</div>
                 <button
-                    className={(pagination.page === pagination.total_results ? "disabled" : "enabled") + " " + ("movieListScreen__loadmore-button")}
+                    className="movieListScreen__loadmore-button movieListScreen__loadmore-button--next"
                     onClick={() => getMovieList(pagination.page + 1, searchQuery)}>next
                 </button>
             </div>
-
-
         </MovieScreen>
     );
 }

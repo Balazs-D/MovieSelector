@@ -2,6 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {DisplayComponent} from "./ResultDipsplay";
+import {ListMode} from "../../Types";
 
 export const ResultDisplay =()=>{
 
@@ -12,13 +13,16 @@ export const ResultDisplay =()=>{
         (state: RootState) => state.moviesSlice.genre
     );
 
+    const mode = useSelector((state: RootState) => state.moviesSlice.listMode)
+
+
     if(!currentGenre && !currentSearchQuery ){
         return null
     }
 
     return <DisplayComponent>
             Your results for:{" "}
-            {currentSearchQuery ? currentSearchQuery : currentGenre.name}
+            {mode === ListMode.SEARCH ? currentSearchQuery : currentGenre.name}
         </DisplayComponent>
 
 }

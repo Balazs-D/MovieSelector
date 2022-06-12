@@ -63,7 +63,6 @@ export const getListByGenre = createAsyncThunk(
             )
             .then((response: AxiosResponse<MovieList>) => response.data)
             .catch((error) => error);
-console.log(res)
 
 
         return res
@@ -80,7 +79,6 @@ export const getMovie = createAsyncThunk(
             )
             .then((response: AxiosResponse<MovieDetails>) => response.data)
             .catch((error) => error);
-        console.log(res);
         return res;
     }
 );

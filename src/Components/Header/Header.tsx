@@ -25,9 +25,8 @@ export const Header = () => {
         }
     }
 
-
     return (
-        <HeaderContainer>
+        <HeaderContainer isQuery={0 < value.length}>
             <div className="header__actions">
                 <Link to="/" className="header__title">
                     <div>MovieSelector</div>
@@ -40,7 +39,6 @@ export const Header = () => {
                         onKeyDown={handleEnterKeydown}
                     />
                     <Link
-                        className={0 === value.length ? "link--disabled" : ""}
                         to="/search-results"
                         onClick={handleSearch}
                     >

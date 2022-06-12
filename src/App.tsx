@@ -13,7 +13,7 @@ const AppContainer = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100vh;
   width: 100%;
 `;
